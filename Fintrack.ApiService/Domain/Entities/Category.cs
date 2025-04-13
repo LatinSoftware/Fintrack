@@ -10,26 +10,27 @@ public class Category : BaseEntity
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public TransactionType Type {get; private set;}
-    public Guid? ParentId { get; private set; }
-    public Guid? UserId { get; private set; } = null;
+    public CategoryId? ParentId { get; private set; }
+    public UserId UserId { get; private set; }
     public Category? Parent { get; set; } 
     public ICollection<Category> Children { get; set; } = [];
 
     private Category() { }
-    public Category(string name, string description, TransactionType type, Guid UserId, Guid? parentId = null)
+    public Category(string name, string description, TransactionType type, UserId userId, CategoryId? parentId = null)
     {
         Name = name;
         Description = description;
         Type = type;
         ParentId = parentId;
+        UserId = userId;
     }
 
-    public static Category Create(string name, string description, TransactionType type, Guid UserId, Guid? parentId = null)
+    public static Category Create(string name, string description, TransactionType type, UserId userId, CategoryId? parentId = null)
     {
-        return new Category(name, description, type, UserId, parentId);
+        return new Category(name, description, type, userId, parentId);
     }
     
-    public void Update(string? name, string? description, TransactionType? type, Guid? parentId = null)
+    public void Update(string? name, string? description, TransactionType? type, CategoryId? parentId = null)
     {
         if (!string.IsNullOrEmpty(name))
             Name = name;

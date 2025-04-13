@@ -11,8 +11,8 @@ public class Account : BaseEntity
     public string Description {get; private set;} = string.Empty;
     public AccountType Type {get; private set;}
     public Money Balance {get; private set;}
-    public Guid? UserId { get; private set; }
-    public Account(string name, string description, AccountType type, Money balance, Guid userId)
+    public UserId UserId { get; private set; }
+    public Account(string name, string description, AccountType type, Money balance, UserId userId)
     {
         Name = name;
         Description = description;
@@ -21,7 +21,7 @@ public class Account : BaseEntity
         UserId = userId;
     }
 
-    public static Account Create(string name, string description, AccountType type, Money balance, Guid userId)
+    public static Account Create(string name, string description, AccountType type, Money balance, UserId userId)
     {
         return new Account(name, description, type, balance, userId);
     }
