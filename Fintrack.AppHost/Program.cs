@@ -1,6 +1,15 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Projects.Fintrack_ApiService>("api");
+var username = builder.AddParameter("username", secret: true);
+var password = builder.AddParameter("password", secret: true);
+
+var postgres = builder.AddPostgres("postgres", username, password, 5432);
+var postgresDb  = postgres.AddDatabase("fintrackdb", "fintrack");
+
+var apiService = builder.AddProject<Projects.Fintrack_ApiService>("api")
+.WithReference(postgresDb)
+.WaitFor(postgres)
+;
 var webPort = 5173;
 
 
