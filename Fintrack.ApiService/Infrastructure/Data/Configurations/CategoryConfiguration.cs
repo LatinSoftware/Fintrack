@@ -1,6 +1,6 @@
-using System;
 using Fintrack.ApiService.Domain.Entities;
 using Fintrack.ApiService.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fintrack.ApiService.Infrastructure.Data.Configurations;
@@ -38,8 +38,10 @@ public class CategoryConfiguration : BaseConfiguration<Category>
             id => ConvertParentIdToGuid(id),
             value => ConvertGuidToParentId(value));
         
-
-        builder.Property(e => e.UserId).IsRequired(false);
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
     }
 

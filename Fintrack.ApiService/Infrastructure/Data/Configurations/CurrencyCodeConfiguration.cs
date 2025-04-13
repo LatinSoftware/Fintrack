@@ -1,4 +1,3 @@
-using System;
 using Fintrack.ApiService.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

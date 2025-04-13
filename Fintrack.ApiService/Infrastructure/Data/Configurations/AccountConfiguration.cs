@@ -2,6 +2,7 @@ using Fintrack.ApiService.Domain.Entities;
 using Fintrack.ApiService.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Fintrack.ApiService.Infrastructure.Data.Extensions;
 
 namespace Fintrack.ApiService.Infrastructure.Data.Configurations;
 
@@ -25,27 +26,16 @@ public class AccountConfiguration : BaseConfiguration<Account>
 
         builder.Property(e => e.Type).IsRequired().HasConversion<string>();
 
-        builder.Property(e => e.Balance).IsRequired();
-
-        builder.OwnsOne(e => e.Balance, sa =>
-        {
-            sa.Property(e => e.Amount).IsRequired().HasPrecision(18,2);
-            sa.Property(e => e.Currency)
-            .IsRequired()
-                .HasMaxLength(3)
-                .HasConversion<string>();
-
-            sa.WithOwner();
-
-            sa.HasOne<Domain.Entities.CurrencyCode>()
-                .WithMany()
-                .HasForeignKey(e => e.Currency)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-        });
-
-        builder.Property(e => e.UserId).IsRequired(false)
+        builder.Property(e => e.UserId).IsRequired()
         .HasConversion(id => id.Value, value => UserId.From(value));
+
+        builder.OwnsOne(e => e.Balance, sa => sa.ConfigureMoney());
+
+        builder.HasOne<Domain.Entities.CurrencyCode>()
+            .WithMany()
+            .HasForeignKey("currency")
+            .HasPrincipalKey(cc => cc.Code)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne<User>()
             .WithMany()
