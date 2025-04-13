@@ -11,6 +11,10 @@ public record Note
         Value = value;
     }
 
+    public static Note From(string value) => new(value);
+    public static Note Empty() => new(string.Empty);
+    public static Note New(string value) => new(value);
+
     public static implicit operator string(Note note) => note.Value;
     public static implicit operator Note(string value) => new(value);
     public override string ToString() => Value;
