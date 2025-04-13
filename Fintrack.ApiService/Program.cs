@@ -1,7 +1,25 @@
+using Fintrack.ApiService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
+
+// builder.AddNpgsqlDbContext<ApplicationContext>(connectionName: "fintrackdb");
+builder.Services.AddDbContextPool<ApplicationContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("fintrackdb") ?? throw new InvalidOperationException("Connection string 'fintrackdb' not found."));
+    options.UseSnakeCaseNamingConvention();
+});
+
+builder.EnrichNpgsqlDbContext<ApplicationContext>(configureSettings: settings =>
+{
+    settings.DisableRetry = false;
+    settings.CommandTimeout = 30;
+});
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
@@ -9,10 +27,17 @@ builder.Services.AddProblemDetails();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();
+
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+db.Database.EnsureCreated();
+
+
 
 if (app.Environment.IsDevelopment())
 {
