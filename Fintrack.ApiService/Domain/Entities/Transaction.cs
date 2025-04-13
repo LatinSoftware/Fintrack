@@ -1,4 +1,3 @@
-using System;
 using Fintrack.ApiService.Domain.Common;
 using Fintrack.ApiService.Domain.Common.Enums;
 using Fintrack.ApiService.Domain.ValueObjects;

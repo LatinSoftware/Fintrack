@@ -1,5 +1,3 @@
-using System;
-
 namespace Fintrack.ApiService.Domain.Common;
 
 public abstract class BaseEntity
