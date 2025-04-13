@@ -12,6 +12,9 @@ public class Account : BaseEntity
     public AccountType Type {get; private set;}
     public Money Balance {get; private set;}
     public UserId UserId { get; private set; }
+
+
+    private Account() { }
     public Account(string name, string description, AccountType type, Money balance, UserId userId)
     {
         Name = name;

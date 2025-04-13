@@ -6,6 +6,7 @@ public class CurrencyCode
     public string Name { get; private set; } = string.Empty;
     public string Symbol { get; private set; } = string.Empty;
 
+    private CurrencyCode() { }
     public CurrencyCode(string code, string name, string symbol)
     {
         Code = code;

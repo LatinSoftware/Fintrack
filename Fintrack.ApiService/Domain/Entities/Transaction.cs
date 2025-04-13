@@ -16,6 +16,7 @@ public class Transaction : BaseEntity
     public string? Description {get; private set;}
     public DateTime Date { get; private set; }
 
+    private Transaction() { }
     public Transaction(AccountId originAccountId, CategoryId categoryId, AccountType type, Money amount,  Note note, UserId userId, DateTime date, string? description)
     {
         UserId = userId;
