@@ -6,6 +6,7 @@ namespace Fintrack.ApiService.Domain.Entities;
 
 public class Account : BaseEntity
 {
+    public AccountId Id { get; private set; } = AccountId.New();
     public string Name {get; private set;} = string.Empty;
     public string Description {get; private set;} = string.Empty;
     public AccountType Type {get; private set;}

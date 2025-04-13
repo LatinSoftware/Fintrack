@@ -1,10 +1,11 @@
 using Fintrack.ApiService.Domain.Common;
+using Fintrack.ApiService.Domain.ValueObjects;
 
 namespace Fintrack.ApiService.Domain.Entities
 {
     public class User : BaseEntity
     {
-
+        public UserId Id { get; private set; } = UserId.New();
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;

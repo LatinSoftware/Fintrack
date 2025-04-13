@@ -1,10 +1,12 @@
 using Fintrack.ApiService.Domain.Common;
 using Fintrack.ApiService.Domain.Common.Enums;
+using Fintrack.ApiService.Domain.ValueObjects;
 
 namespace Fintrack.ApiService.Domain.Entities;
 
 public class Category : BaseEntity
 {
+    public CategoryId Id { get; private set; } = CategoryId.New();
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public TransactionType Type {get; private set;}
