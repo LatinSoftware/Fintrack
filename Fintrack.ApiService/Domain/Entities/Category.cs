@@ -9,14 +9,14 @@ public class Category : BaseEntity
     public CategoryId Id { get; private set; } = CategoryId.New();
     public string Name { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
-    public TransactionType Type {get; private set;}
+    public CategoryTypeEnum Type {get; private set;}
     public CategoryId? ParentId { get; private set; }
     public UserId UserId { get; private set; }
     public Category? Parent { get; set; } 
     public ICollection<Category> Children { get; set; } = [];
 
     private Category() { }
-    public Category(string name, string description, TransactionType type, UserId userId, CategoryId? parentId = null)
+    public Category(string name, string description, CategoryTypeEnum type, UserId userId, CategoryId? parentId = null)
     {
         Name = name;
         Description = description;
@@ -25,12 +25,12 @@ public class Category : BaseEntity
         UserId = userId;
     }
 
-    public static Category Create(string name, string description, TransactionType type, UserId userId, CategoryId? parentId = null)
+    public static Category Create(string name, string description, CategoryTypeEnum type, UserId userId, CategoryId? parentId = null)
     {
         return new Category(name, description, type, userId, parentId);
     }
     
-    public void Update(string? name, string? description, TransactionType? type, CategoryId? parentId = null)
+    public void Update(string? name, string? description, CategoryTypeEnum? type, CategoryId? parentId = null)
     {
         if (!string.IsNullOrEmpty(name))
             Name = name;
