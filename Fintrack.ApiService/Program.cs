@@ -1,9 +1,13 @@
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Carter;
 using Fintrack.ApiService.Infrastructure.Data;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
@@ -22,20 +26,37 @@ builder.EnrichNpgsqlDbContext<ApplicationContext>(configureSettings: settings =>
 });
 
 // Add services to the container.
-builder.Services.AddProblemDetails();
+builder.Services.AddProblemDetails(options => {
+    options.CustomizeProblemDetails = context => {
+        context.ProblemDetails.Instance =  $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}";
+        context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+        Activity? activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+        context.ProblemDetails.Extensions.TryAdd("traceId", activity?.Id);
+    };
+});
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: true));
+});
+
+builder.Services.AddCarter();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
 app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 db.Database.EnsureCreated();
+Seed.ExecuteAsync(db);
 
 
 
@@ -43,7 +64,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
 string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
 app.MapGet("/weatherforecast", () =>
@@ -61,6 +81,8 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast");
 
 app.MapDefaultEndpoints();
+
+app.MapCarter();
 
 app.Run();
 
