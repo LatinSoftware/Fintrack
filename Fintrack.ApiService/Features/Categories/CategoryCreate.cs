@@ -4,6 +4,7 @@ using Fintrack.ApiService.Domain.Entities;
 using Fintrack.ApiService.Domain.ValueObjects;
 using Fintrack.ApiService.Infrastructure.Data;
 using Fintrack.ApiService.Shared.Abstractions;
+using Fintrack.ApiService.Shared.Extensions;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,7 @@ public class CategoryCreate
             {
                 var existParent = await applicationContext.Categories.AnyAsync(c => c.Id == CategoryId.From(request.ParentId.Value), cancellationToken: cancellationToken);
                 if (!existParent)
-                    return Result.Fail("Parent category not found.");
+                    return Result.Fail(CategoryErrors.ParentCategoryNotFound(request.ParentId.Value));
             }
 
             var category = Category.Create(request.Name, request.Description, request.Type, UserId.From(request.UserId), request.ParentId.HasValue ? CategoryId.From(request.ParentId.Value) : null);
@@ -40,14 +41,13 @@ public class CategoryCreate
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/categories", async (Request request, ISender sender) =>
+            app.MapPost("/categories", async (Request request, ISender sender, HttpContext ctx) =>
             {
                 var result = await sender.Send(request);
-                if (result.IsFailed)
-                    return Results.BadRequest(result.Errors);
+                
+                return result.ToActionResult(
+                    response => Results.Created($"/categories/{response.Id}", response));
 
-                var response = new Response(result.Value.Id, result.Value.Name, result.Value.Description, result.Value.Type);
-                return Results.Created($"/categories/{response.Id}", response);
             })
             .WithName("CreateCategory")
             .Produces<Response>(StatusCodes.Status201Created)
