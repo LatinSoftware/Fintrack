@@ -2,7 +2,10 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Carter;
+using Fintrack.ApiService.Behaviors;
 using Fintrack.ApiService.Infrastructure.Data;
+using Fintrack.ApiService.Shared.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +28,8 @@ builder.EnrichNpgsqlDbContext<ApplicationContext>(configureSettings: settings =>
     settings.CommandTimeout = 30;
 });
 
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 // Add services to the container.
 builder.Services.AddProblemDetails(options => {
     options.CustomizeProblemDetails = context => {
@@ -44,7 +49,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddCarter();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssemblyContaining<Program>();
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
+
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program), includeInternalTypes: true);
 
 var app = builder.Build();
 
