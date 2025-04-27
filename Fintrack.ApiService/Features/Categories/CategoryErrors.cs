@@ -6,6 +6,7 @@ namespace Fintrack.ApiService.Features.Categories;
 public static class CategoryErrors
 {
     public static Error ParentCategoryNotFound(Guid parentId) => new NotFoundError($"Parent category with ID '{parentId}' was not found.");
+    public static Error CategoryNotFound(Guid categoryId) => new NotFoundError($"Category with ID '{categoryId}' was not found.");
 
     public static class Validator
     {

@@ -56,21 +56,7 @@ public sealed class CategoryGetAll
                 var name = context.Request.Query["name"].FirstOrDefault();
                 var typeString = context.Request.Query["type"].FirstOrDefault();
 
-                 Guid userId;
-
-
-                if (string.IsNullOrEmpty(userIdQueryParam))
-                {
-                    if (!Guid.TryParse(context.User.Identity?.Name, out userId))
-                    {
-                        throw new UnauthorizedAccessException("User ID not found in the token.");
-                    }
-                }
-                else
-                {
-                    userId = Guid.Parse(userIdQueryParam);
-                }
-
+                 var userId = context.GetUserId(userIdQueryParam);
 
                 CategoryTypeEnum? type = null;
                 if (!string.IsNullOrEmpty(typeString) && Enum.TryParse<CategoryTypeEnum>(typeString, true, out var parsedType))
@@ -78,7 +64,7 @@ public sealed class CategoryGetAll
                     type = parsedType;
                 }
 
-                var result = await sender.Send(new Query(userId, name, type));
+                var result = await sender.Send(new Query(userId.Value, name, type));
                 return result.ToActionResult(response => Results.Ok(response));
 
             })
