@@ -55,25 +55,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             
         };
 
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = context =>
-            {
-                context.NoResult();
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                context.Response.ContentType = "application/json";
-                var result = JsonSerializer.Serialize(new { error = "Unauthorized" });
-                return context.Response.WriteAsync(result);
-            },
-            OnChallenge = context =>
-            {
-                context.HandleResponse();
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                context.Response.ContentType = "application/json";
-                var result = JsonSerializer.Serialize(new { error = "Unauthorized" });
-                return context.Response.WriteAsync(result);
-            }
-        };
 
     });
 
