@@ -30,7 +30,7 @@ public class Category : BaseEntity
         return new Category(name, description, type, userId, parentId);
     }
     
-    public void Update(string? name, string? description, CategoryTypeEnum? type, CategoryId? parentId = null)
+    public void Update(string? name, string? description, CategoryTypeEnum? type)
     {
         if (!string.IsNullOrEmpty(name))
             Name = name;
@@ -38,8 +38,12 @@ public class Category : BaseEntity
             Description = description;
         if (type.HasValue)
             Type = type.Value;
-        if (parentId.HasValue)
-            ParentId = parentId.Value;
     }
 
+    public void SetParent(Category parent)
+    {
+        Parent = parent;
+        ParentId = parent.Id;
+    }
+    
 }
