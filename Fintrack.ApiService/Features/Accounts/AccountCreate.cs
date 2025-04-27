@@ -6,6 +6,7 @@ using Fintrack.ApiService.Infrastructure.Data;
 using Fintrack.ApiService.Shared.Abstractions;
 using Fintrack.ApiService.Shared.Extensions;
 using FluentResults;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,18 @@ public class AccountCreate
 {
     public record Response(Guid Id, string Name, string Description, AccountType Type, Money Balance);
     public record Request(string Name, string Description, AccountType Type, Money Balance, Guid UserId) : ICommand<Response>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required.");
+            RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required.");
+            RuleFor(x => x.Type).IsInEnum().WithMessage("Invalid account type.");
+            RuleFor(x => x.Balance).Must(x => x.Amount >= 0).WithMessage("Balance shouldn't be negative.");
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("User ID is required.");
+        }
+    }
 
     public sealed class AccountCreateHandler(ApplicationContext applicationContext) : IRequestHandler<Request, Result<Response>>
     {
@@ -26,11 +39,6 @@ public class AccountCreate
                 if (!existUser)
                     return Result.Fail(AccountErrors.UserNotFound(request.UserId));
             }
-
-            // if (request.Balance.Amount < 0)
-            // {
-            //     return Result.Fail(AccountErrors)
-            // }
 
             var account = Account.Create(request.Name, request.Description, request.Type, request.Balance, UserId.From(request.UserId));
             applicationContext.Accounts.Add(account);
