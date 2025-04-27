@@ -11,13 +11,13 @@ public class Transaction : BaseEntity
     public AccountId OriginAccountId { get; private set; }
     public CategoryId CategoryId { get; private set; }
     public Money Amount {get; private set;}
-    public AccountType Type { get; private set; }
+    public TransactionType Type { get; private set; }
     public Note Note { get; private set; }
     public string? Description {get; private set;}
     public DateTime Date { get; private set; }
 
     private Transaction() { }
-    public Transaction(AccountId originAccountId, CategoryId categoryId, AccountType type, Money amount,  Note note, UserId userId, DateTime date, string? description)
+    public Transaction(AccountId originAccountId, CategoryId categoryId, TransactionType type, Money amount,  Note note, UserId userId, DateTime date, string? description)
     {
         UserId = userId;
         OriginAccountId = originAccountId;
@@ -29,11 +29,11 @@ public class Transaction : BaseEntity
         Date = date;
     }
 
-    public static Transaction Create(AccountId originAccountId, CategoryId categoryId, AccountType type, Money amount, Note note, UserId userId, DateTime date, string? description)
+    public static Transaction Create(AccountId originAccountId, CategoryId categoryId, TransactionType type, Money amount, Note note, UserId userId, DateTime date, string? description)
     {
         return new Transaction(originAccountId, categoryId, type, amount, note, userId, date, description);
     }
-    public void Update(AccountId? originAccountId, CategoryId? categoryId, AccountType? type, Money? amount, Note? note, DateTime? date, string? description)
+    public void Update(AccountId? originAccountId, CategoryId? categoryId, TransactionType? type, Money? amount, Note? note, DateTime? date, string? description)
     {
         if (originAccountId.HasValue)
             OriginAccountId = originAccountId.Value;
