@@ -68,6 +68,7 @@ public sealed class CategoryGetAll
                 return result.ToActionResult(response => Results.Ok(response));
 
             })
+            .RequireAuthorization()
             .WithName("GetAllCategories")
             .Produces<IEnumerable<CategoryDto>>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
