@@ -12,5 +12,26 @@ public static class Seed
             context.Users.Add(user);
             context.SaveChanges();
         }
+
+        if (!context.CurrencyCodes.Any())
+        {
+            var currencyCodes = new List<CurrencyCode>
+            {
+                new("USD", "United States Dollar", "$"),
+                new("EUR", "Euro", "€"),
+                new("GBP", "British Pound Sterling", "£"),
+                new("JPY", "Japanese Yen", "¥"),
+                new("AUD", "Australian Dollar", "A$"),
+                new("CAD", "Canadian Dollar", "C$"),
+                new("CHF", "Swiss Franc", "CHF"),
+                new("CNY", "Chinese Yuan", "¥"),
+                new("SEK", "Swedish Krona", "kr"),
+                new("DOP", "Dominican Peso", "RD$"),
+                new("ARS", "Argentine Peso", "$"),
+            };
+
+            context.CurrencyCodes.AddRange(currencyCodes);
+            context.SaveChanges();
+        }
     }
 }
