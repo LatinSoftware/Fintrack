@@ -12,5 +12,10 @@ public record Money
         Currency = currency;
     }
 
+    public static Money From(decimal amount, string currencyCode)
+    {
+        var currency = new CurrencyCode(currencyCode);
+        return new Money(amount, currency);
+    }
      public override string ToString() => $"{Amount} {Currency}";
 }
