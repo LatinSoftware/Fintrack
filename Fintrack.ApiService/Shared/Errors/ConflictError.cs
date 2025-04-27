@@ -11,3 +11,13 @@ public class ConflictError : Error
     }
 }
 
+public class UnauthorizeError : Error
+{
+    public UnauthorizeError(string message)
+        : base(message)
+    {
+        WithMetadata("StatusCode", StatusCodes.Status401Unauthorized);
+        WithMetadata("ErrorCode", "Unauthorized");
+        WithMetadata("ErrorType", "Authentication");
+    }
+}
