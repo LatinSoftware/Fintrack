@@ -34,6 +34,7 @@ public sealed class AccountUpdate
             RuleFor(x => x.Type).IsInEnum()
                 .When(x => x.Type.HasValue);
             RuleFor(x => x.Balance).Must(x => x?.Amount >= 0);
+            RuleFor(x => x.Balance).Must(x => !string.IsNullOrWhiteSpace(x?.Currency?.ToString()));
         }
     }
 
@@ -47,6 +48,21 @@ public sealed class AccountUpdate
             if (account is null)
             {
                 return Result.Fail(AccountErrors.AccountNotFound(request.Id.Value));
+            }
+
+            if (account.Balance is null)
+            {
+                return Result.Fail(AccountErrors.AccountInvalidBalance(request.Id.Value));
+            }
+
+            if (account.Balance.Amount < 0)
+            {
+                return Result.Fail(AccountErrors.AccountNegativeBalance(request.Id.Value));
+            }
+
+            if (string.IsNullOrWhiteSpace(account.Balance.Currency?.ToString()))
+            {
+                return Result.Fail(AccountErrors.AccountInvalidCurrency(request.Id.Value));
             }
 
             account.Update(request.Name, request.Description, request.Type, request.Balance);
