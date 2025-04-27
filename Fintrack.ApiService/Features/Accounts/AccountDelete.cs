@@ -3,6 +3,7 @@ using Carter;
 using Fintrack.ApiService.Domain.ValueObjects;
 using Fintrack.ApiService.Infrastructure.Data;
 using Fintrack.ApiService.Shared.Abstractions;
+using Fintrack.ApiService.Shared.Extensions;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
