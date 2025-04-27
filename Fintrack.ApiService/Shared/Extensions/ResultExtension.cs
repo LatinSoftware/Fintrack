@@ -20,6 +20,21 @@ public static class ResultExtension
         );
     }
 
+    public static IResult ToActionResult(this Result result, Func<IResult> onSuccess)
+    {
+        if (result.IsSuccess)
+            return onSuccess();
+
+        var statusCode = MapErrorToStatusCode(result.Errors);
+
+        return Results.Problem(
+            statusCode: statusCode,
+            title: "One or more errors occurred.",
+            type: $"https://httpstatuses.com/{statusCode}",
+            detail: string.Join(" | ", result.Errors.Select(e => e.Message))
+        );
+    }
+
     private static int MapErrorToStatusCode(List<IError> errors)
     {
         var statusCodeMeta = errors
