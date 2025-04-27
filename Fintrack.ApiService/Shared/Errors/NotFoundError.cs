@@ -10,4 +10,3 @@ public class NotFoundError : Error
         WithMetadata("StatusCode", StatusCodes.Status404NotFound);
     }
 }
-

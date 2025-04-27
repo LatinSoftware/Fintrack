@@ -6,6 +6,7 @@ using Fintrack.ApiService.Infrastructure.Data;
 using Fintrack.ApiService.Shared.Abstractions;
 using Fintrack.ApiService.Shared.Extensions;
 using FluentResults;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,17 @@ public class CategoryCreate
 {
     public record Response(Guid Id, string Name, string Description, CategoryTypeEnum Type);
     public record Request(string Name, string Description, CategoryTypeEnum Type, Guid UserId, Guid? ParentId = null) : ICommand<Response>;
+
+    public class Validator : AbstractValidator<Request>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required.");
+            RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required.");
+            RuleFor(x => x.Type).IsInEnum().WithMessage("Invalid category type.");
+            RuleFor(x => x.UserId).NotEmpty().WithMessage("User ID is required.");
+        }
+    }
 
     public sealed class CreateCategoryHandler(ApplicationContext applicationContext) : IRequestHandler<Request, Result<Response>>
     {
