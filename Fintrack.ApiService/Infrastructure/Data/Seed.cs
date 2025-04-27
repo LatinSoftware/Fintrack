@@ -1,4 +1,6 @@
+using Fintrack.ApiService.Domain.Common.Enums;
 using Fintrack.ApiService.Domain.Entities;
+using Fintrack.ApiService.Domain.ValueObjects;
 
 namespace Fintrack.ApiService.Infrastructure.Data;
 
@@ -15,7 +17,7 @@ public static class Seed
 
         if (!context.CurrencyCodes.Any())
         {
-            var currencyCodes = new List<CurrencyCode>
+            var currencyCodes = new List<Domain.Entities.CurrencyCode>
             {
                 new("USD", "United States Dollar", "$"),
                 new("EUR", "Euro", "€"),
@@ -32,6 +34,22 @@ public static class Seed
 
             context.CurrencyCodes.AddRange(currencyCodes);
             context.SaveChanges();
+        }
+
+        if(!context.Accounts.Any())
+        {
+            var user = context.Users.FirstOrDefault(u => u.Name == "system");
+            if (user != null)
+            {
+                var accounts = new List<Account>
+                {
+                    Account.Create("cash", "Cash account", AccountType.Cash, Money.From(0, "DOP"), user.Id),
+                    Account.Create("savings", "Savings account", AccountType.Bank, Money.From(0, "DOP"), user.Id),
+                };
+
+                context.Accounts.AddRange(accounts);
+                context.SaveChanges();
+            }
         }
     }
 }
