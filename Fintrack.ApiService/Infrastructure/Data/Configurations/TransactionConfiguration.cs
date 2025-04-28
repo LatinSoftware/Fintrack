@@ -54,12 +54,12 @@ public class TransactionConfiguration : BaseConfiguration<Transaction>
             .HasForeignKey(e => e.UserId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        builder.HasOne<Account>()
+        builder.HasOne(x => x.OriginAccount)
             .WithMany()
             .HasForeignKey(e => e.OriginAccountId)
             .OnDelete(DeleteBehavior.Restrict);
         
-        builder.HasOne<Category>()
+        builder.HasOne(x => x.Category)
             .WithMany()
             .HasForeignKey(e => e.CategoryId)
             .OnDelete(DeleteBehavior.Restrict);

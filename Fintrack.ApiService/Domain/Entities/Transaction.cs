@@ -10,11 +10,15 @@ public class Transaction : BaseEntity
     public UserId UserId { get; private set; }
     public AccountId OriginAccountId { get; private set; }
     public CategoryId CategoryId { get; private set; }
-    public Money Amount {get; private set;}
+    public Money Amount {get; private set;} = default!;
     public TransactionType Type { get; private set; }
     public Note Note { get; private set; }
     public string? Description {get; private set;}
     public DateTime Date { get; private set; }
+
+    public Account OriginAccount { get; set; }
+    public Category Category { get; set; }
+
 
     private Transaction() { }
     public Transaction(AccountId originAccountId, CategoryId categoryId, TransactionType type, Money amount,  Note note, UserId userId, DateTime date, string? description)
