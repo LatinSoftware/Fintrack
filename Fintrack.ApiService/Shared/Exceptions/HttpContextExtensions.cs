@@ -17,4 +17,11 @@ public static class HttpContextExtensions
         }
         return UserId.From(Guid.Parse(userIdQueryParam));
     }
+
+    public static UserId GetUserId(this HttpContext context)
+    {
+        var userIdQueryParam = context.Request.Query["userId"].FirstOrDefault();
+
+        return GetUserId(context, userIdQueryParam);
+    }
 }
