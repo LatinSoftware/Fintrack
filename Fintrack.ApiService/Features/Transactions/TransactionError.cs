@@ -1,4 +1,3 @@
-using System;
 using Fintrack.ApiService.Domain.Common.Enums;
 using Fintrack.ApiService.Domain.ValueObjects;
 using Fintrack.ApiService.Shared.Errors;
@@ -7,6 +6,8 @@ namespace Fintrack.ApiService.Features.Transactions;
 
 public class TransactionError
 {
+    public static NotFoundError TransactionNotFound(TransactionId transactionId) =>
+        new($"TransactionId {transactionId.Value} not found.");
     public static DomainError CategoryNotFound(CategoryId categoryId) =>
             new($"CategoryId {categoryId.Value} not found.");
 
