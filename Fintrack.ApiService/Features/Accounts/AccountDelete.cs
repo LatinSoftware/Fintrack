@@ -49,7 +49,12 @@ public sealed class AccountDelete
                 var result = await sender.Send(new Request(AccountId.From(id)) { UserId = userId }, context.RequestAborted);
 
                 return result.ToActionResult(() => Results.NoContent());
-            });
+            })
+            .WithName("AccountDelete")
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status500InternalServerError);
         }
     }
 }

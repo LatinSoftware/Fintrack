@@ -91,7 +91,12 @@ public sealed class AccountUpdate
                 var result = await sender.Send(request, context.RequestAborted);
 
                 return result.ToActionResult(() => Results.NoContent());
-            });
+            })
+            .WithName("AccountUpdate")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status500InternalServerError);
         }
     }
 }

@@ -48,7 +48,12 @@ public sealed class AccountGetById
                 var result = await sender.Send(new Request(userId, AccountId.From(id)), context.RequestAborted);
 
                 return result.ToActionResult(data => Results.Ok(data));
-            });
+            })
+            .WithName("GetAccountById")
+            .Produces<Response>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status500InternalServerError);
         }
     }
 }
