@@ -34,7 +34,7 @@ public sealed class AccountUpdate
             RuleFor(x => x.Type).IsInEnum()
                 .When(x => x.Type.HasValue);
             RuleFor(x => x.Balance).Must(x => x?.Amount >= 0);
-            RuleFor(x => x.Balance).Must(x => !string.IsNullOrWhiteSpace(x?.Currency?.ToString()));
+            RuleFor(x => x.Balance).Must(x => !string.IsNullOrWhiteSpace(x?.Currency?.Code));
         }
     }
 
@@ -61,6 +61,12 @@ public sealed class AccountUpdate
             }
 
             if (string.IsNullOrWhiteSpace(account.Balance.Currency?.ToString()))
+            {
+                return Result.Fail(AccountErrors.AccountInvalidCurrency(request.Id.Value));
+            }
+
+            var currency = await applicationContext.CurrencyCodes.FirstOrDefaultAsync(x => x.Code == request.Balance!.Currency.Code, cancellationToken: cancellationToken);
+            if (currency is null)
             {
                 return Result.Fail(AccountErrors.AccountInvalidCurrency(request.Id.Value));
             }

@@ -25,6 +25,7 @@ public class AccountCreate
             RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required.");
             RuleFor(x => x.Type).IsInEnum().WithMessage("Invalid account type.");
             RuleFor(x => x.Balance).Must(x => x.Amount >= 0).WithMessage("Balance shouldn't be negative.");
+            RuleFor(x => x.Balance).Must(x => !string.IsNullOrWhiteSpace(x?.Currency?.Code)).WithMessage("Currency must be specified.");
             RuleFor(x => x.UserId).NotEmpty().WithMessage("User ID is required.");
         }
     }
