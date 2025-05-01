@@ -7,9 +7,7 @@ export function useGetCategories() {
         queryKey: ["categories"],
         queryFn: async () => {
             const response = await api.get<any, Category[]>("/categories");
-            console.log("Categories response", response);
-
-            return response || [];
+            return response ;
         },
         refetchOnWindowFocus: false,
     })
