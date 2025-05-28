@@ -13,7 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
-import { Route as AuthenticatedSettingsCategoryImport } from './routes/_authenticated/settings/category'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedSettingsIndexImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedSettingsIncomeCategoriesImport } from './routes/_authenticated/settings/income-categories'
 
 // Create/Update Routes
 
@@ -28,11 +30,27 @@ const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
-const AuthenticatedSettingsCategoryRoute =
-  AuthenticatedSettingsCategoryImport.update({
-    id: '/settings/category',
-    path: '/settings/category',
+const AuthenticatedSettingsRouteRoute = AuthenticatedSettingsRouteImport.update(
+  {
+    id: '/settings',
+    path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any,
+)
+
+const AuthenticatedSettingsIndexRoute = AuthenticatedSettingsIndexImport.update(
+  {
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any,
+)
+
+const AuthenticatedSettingsIncomeCategoriesRoute =
+  AuthenticatedSettingsIncomeCategoriesImport.update({
+    id: '/income-categories',
+    path: '/income-categories',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -46,6 +64,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRoute
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
@@ -53,26 +78,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexImport
       parentRoute: typeof AuthenticatedRouteImport
     }
-    '/_authenticated/settings/category': {
-      id: '/_authenticated/settings/category'
-      path: '/settings/category'
-      fullPath: '/settings/category'
-      preLoaderRoute: typeof AuthenticatedSettingsCategoryImport
-      parentRoute: typeof AuthenticatedRouteImport
+    '/_authenticated/settings/income-categories': {
+      id: '/_authenticated/settings/income-categories'
+      path: '/income-categories'
+      fullPath: '/settings/income-categories'
+      preLoaderRoute: typeof AuthenticatedSettingsIncomeCategoriesImport
+      parentRoute: typeof AuthenticatedSettingsRouteImport
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexImport
+      parentRoute: typeof AuthenticatedSettingsRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface AuthenticatedSettingsRouteRouteChildren {
+  AuthenticatedSettingsIncomeCategoriesRoute: typeof AuthenticatedSettingsIncomeCategoriesRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+}
+
+const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteChildren =
+  {
+    AuthenticatedSettingsIncomeCategoriesRoute:
+      AuthenticatedSettingsIncomeCategoriesRoute,
+    AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  }
+
+const AuthenticatedSettingsRouteRouteWithChildren =
+  AuthenticatedSettingsRouteRoute._addFileChildren(
+    AuthenticatedSettingsRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedSettingsCategoryRoute: typeof AuthenticatedSettingsCategoryRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedSettingsCategoryRoute: AuthenticatedSettingsCategoryRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -80,32 +129,44 @@ const AuthenticatedRouteRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '': typeof AuthenticatedRouteRouteWithChildren
+  '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/': typeof AuthenticatedIndexRoute
-  '/settings/category': typeof AuthenticatedSettingsCategoryRoute
+  '/settings/income-categories': typeof AuthenticatedSettingsIncomeCategoriesRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
-  '/settings/category': typeof AuthenticatedSettingsCategoryRoute
+  '/settings/income-categories': typeof AuthenticatedSettingsIncomeCategoriesRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/settings/category': typeof AuthenticatedSettingsCategoryRoute
+  '/_authenticated/settings/income-categories': typeof AuthenticatedSettingsIncomeCategoriesRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '' | '/' | '/settings/category'
+  fullPaths:
+    | ''
+    | '/settings'
+    | '/'
+    | '/settings/income-categories'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/settings/category'
+  to: '/' | '/settings/income-categories' | '/settings'
   id:
     | '__root__'
     | '/_authenticated'
+    | '/_authenticated/settings'
     | '/_authenticated/'
-    | '/_authenticated/settings/category'
+    | '/_authenticated/settings/income-categories'
+    | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
 }
 
@@ -133,17 +194,29 @@ export const routeTree = rootRoute
     "/_authenticated": {
       "filePath": "_authenticated/route.tsx",
       "children": [
-        "/_authenticated/",
-        "/_authenticated/settings/category"
+        "/_authenticated/settings",
+        "/_authenticated/"
+      ]
+    },
+    "/_authenticated/settings": {
+      "filePath": "_authenticated/settings/route.tsx",
+      "parent": "/_authenticated",
+      "children": [
+        "/_authenticated/settings/income-categories",
+        "/_authenticated/settings/"
       ]
     },
     "/_authenticated/": {
       "filePath": "_authenticated/index.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/settings/category": {
-      "filePath": "_authenticated/settings/category.tsx",
-      "parent": "/_authenticated"
+    "/_authenticated/settings/income-categories": {
+      "filePath": "_authenticated/settings/income-categories.tsx",
+      "parent": "/_authenticated/settings"
+    },
+    "/_authenticated/settings/": {
+      "filePath": "_authenticated/settings/index.tsx",
+      "parent": "/_authenticated/settings"
     }
   }
 }

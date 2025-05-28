@@ -1,20 +1,15 @@
 import {
   IconBook2,
-  IconBrowserCheck,
   IconChartArcs,
   IconCoins,
   IconHelp,
   IconLayoutDashboard,
-  IconNotification,
-  IconPalette,
   IconReceipt,
   IconRefresh,
   IconReportMoney,
   IconSettings,
   IconTarget,
-  IconTool,
   IconTrendingUp,
-  IconUserCog,
   IconWallet,
 } from '@tabler/icons-react'
 
@@ -78,22 +73,22 @@ export const sidebarData: SidebarData = {
           icon: IconSettings,
           items: [
             {
-              title: 'Income Category settings',
-              url: '/settings/income-categories',
+              title: 'Income Category',
+              url: '/settings',
               icon: IconCoins,
             },
             {
-              title: 'Expenses Category settings',
+              title: 'Expenses Category',
               url: '/settings/expense-categories',
               icon: IconReceipt,
             },
             {
-              title: 'Accounts settings',
+              title: 'Accounts',
               url: '/settings/accounts',
               icon: IconWallet,
             },
             {
-              title: 'Budget settings',
+              title: 'Budget',
               url: '/settings/budgets',
               icon: IconReportMoney,
             },

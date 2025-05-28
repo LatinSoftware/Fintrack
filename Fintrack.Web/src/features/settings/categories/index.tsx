@@ -1,45 +1,27 @@
-import { Header } from '@/components/layout/header'
-import { Main } from '@/components/layout/main'
+import ContentSection from '../components/content-section'
+import { CategoryDialogs } from './components/category-dialogs'
+import { CategoryPrimaryButtons } from './components/category-primary-buttons'
+import { categoryColumns } from './components/columns'
+import { DataTable } from './components/data-table'
+import CategoryProvider from './context/category-context'
 import { useGetCategories } from './hooks'
 
-
-
-
 export default function SettingsCategories() {
-
-  const { data, isLoading, isError, error } = useGetCategories()
+  const { data } = useGetCategories()
 
   return (
-    <>
-      <Header />
+    <CategoryProvider>
+      <ContentSection title="Categories" desc="Manage your categories">
+        <>
+          <CategoryPrimaryButtons />
 
-      <Main fixed>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Categories settings
-          </h1>
-          <p className="text-muted-foreground">
-            Manage your categories here. You can add, edit, or delete categories
-            as needed.
-          </p>
+          <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
+            <DataTable data={data ?? []} columns={categoryColumns} />
+          </div>
 
-          <div className="mt-6 space-y-4">
-            {isLoading && <p>Loading...</p>}
-            {isError && <p>Error: {error.message}</p>}
-            {data && (
-              <ul className="space-y-2">
-                {data.map((category) => (
-                  <li key={category.id} className="border p-4 rounded-md">
-                    <h2 className="text-lg font-semibold">{category.name}</h2>
-                    <p>{category.description}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-            </div>
-          
-        </div>
-      </Main>
-    </>
+          <CategoryDialogs />
+        </>
+      </ContentSection>
+    </CategoryProvider>
   )
 }

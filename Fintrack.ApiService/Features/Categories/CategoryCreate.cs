@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Carter;
 using Fintrack.ApiService.Domain.Common.Enums;
 using Fintrack.ApiService.Domain.Entities;
@@ -15,7 +16,10 @@ namespace Fintrack.ApiService.Features.Categories;
 public class CategoryCreate
 {
     public record Response(Guid Id, string Name, string Description, CategoryTypeEnum Type);
-    public record Request(string Name, string Description, CategoryTypeEnum Type, Guid UserId, Guid? ParentId = null) : ICommand<Response>;
+    public record Request(string Name, string Description, CategoryTypeEnum Type, Guid? ParentId = null) : ICommand<Response>
+    {
+        [JsonIgnore] public UserId UserId { get; set; }
+    };
 
     public class Validator : AbstractValidator<Request>
     {
@@ -24,7 +28,6 @@ public class CategoryCreate
             RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required.");
             RuleFor(x => x.Description).NotEmpty().WithMessage("Description is required.");
             RuleFor(x => x.Type).IsInEnum().WithMessage("Invalid category type.");
-            RuleFor(x => x.UserId).NotEmpty().WithMessage("User ID is required.");
         }
     }
 
@@ -32,14 +35,14 @@ public class CategoryCreate
     {
         public async Task<Result<Response>> Handle(Request request, CancellationToken cancellationToken)
         {
-             if(request.ParentId.HasValue)
+            if (request.ParentId.HasValue)
             {
                 var existParent = await applicationContext.Categories.AnyAsync(c => c.Id == CategoryId.From(request.ParentId.Value), cancellationToken: cancellationToken);
                 if (!existParent)
                     return Result.Fail(CategoryErrors.ParentCategoryNotFound(request.ParentId.Value));
             }
 
-            var category = Category.Create(request.Name, request.Description, request.Type, UserId.From(request.UserId), request.ParentId.HasValue ? CategoryId.From(request.ParentId.Value) : null);
+            var category = Category.Create(request.Name, request.Description, request.Type, request.UserId, request.ParentId.HasValue ? CategoryId.From(request.ParentId.Value) : null);
             applicationContext.Categories.Add(category);
             await applicationContext.SaveChangesAsync(cancellationToken);
 
@@ -55,8 +58,8 @@ public class CategoryCreate
         {
             app.MapPost("/categories", async (Request request, ISender sender, HttpContext ctx) =>
             {
+                request.UserId = ctx.GetUserId();;
                 var result = await sender.Send(request);
-                
                 return result.ToActionResult(
                     response => Results.Created($"/categories/{response.Id}", response));
 
