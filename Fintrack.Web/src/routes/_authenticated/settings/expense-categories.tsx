@@ -1,11 +1,12 @@
+import SettingsCategories from '@/features/settings/categories'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute(
-  '/_authenticated/settings/income-categories',
+  '/_authenticated/settings/expense-categories',
 )({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div>Hello "/_authenticated/settings/income-categories"!</div>
+  return <SettingsCategories type="expense" />
 }
