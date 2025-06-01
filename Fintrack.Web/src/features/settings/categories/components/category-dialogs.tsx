@@ -1,8 +1,9 @@
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { useCategory } from '../context/category-context'
+
 import { CategoryMutateDrawer } from './category-mutate-drawer'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { useDeleteCategory } from '../hooks'
+import { useCategory } from '../context/category-context'
 
 export function CategoryDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useCategory()

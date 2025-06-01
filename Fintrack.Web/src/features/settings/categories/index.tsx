@@ -5,6 +5,7 @@ import { CategoryPrimaryButtons } from './components/category-primary-buttons'
 import { categoryColumns } from './components/columns'
 import { DataTable } from './components/data-table'
 import CategoryProvider from './context/category-context'
+
 import { useGetCategories } from './hooks'
 
 interface Props {
