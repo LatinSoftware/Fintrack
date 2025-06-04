@@ -1,4 +1,14 @@
+/**
+ * account type
+ */
+export enum AccountType {
+  Bank = 'bank',
+  Cash = 'cash',
+  CreditCard = 'credit_card',
+}
+
 export interface Account {
+  id: string
   /**
    * current amount
    */
@@ -8,16 +18,6 @@ export interface Account {
    */
   currencyCode: string
   description?: null | string
-  id: string
   name: string
-  type: Type
-}
-
-/**
- * account type
- */
-export enum Type {
-  Bank = 'bank',
-  Cash = 'cash',
-  CreditCard = 'credit_card',
+  type: AccountType
 }
