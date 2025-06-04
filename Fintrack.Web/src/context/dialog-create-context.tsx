@@ -1,5 +1,5 @@
 import useDialogState from '@/hooks/use-dialog-state'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type DialogType = 'create' | 'update' | 'delete'
 
@@ -20,6 +20,7 @@ export function createEntityProvider<T>() {
   return function EntityProvider({ children }: Props) {
     const [open, setOpen] = useDialogState<DialogType>(null)
     const [currentRow, setCurrentRow] = useState<T | null>(null)
+
     return (
       <EntityContext value={{ open, setOpen, currentRow, setCurrentRow }}>
         {children}
