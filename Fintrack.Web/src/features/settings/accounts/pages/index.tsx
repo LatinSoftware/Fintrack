@@ -1,15 +1,16 @@
 import ContentSection from '../../components/content-section'
 import { AccountProvider } from '../context/account-context'
 import { DataTable } from '@/components/datatable/data-table'
-import { Type, type Account } from '../account.type'
+import { AccountType, type Account } from '../account.type'
 import { accountColumns } from '../components/columns'
 import DataTableHeader from '../components/data-table-header'
+import { AccountDialog } from '../components/account-dialogs'
 
 const data: Account[] = [
   {
     id: '1',
     name: 'Main Bank Account',
-    type: Type.Bank,
+    type: AccountType.Bank,
     balance: 12345.67,
     currencyCode: 'USD',
     description: 'This is the main checking account',
@@ -17,7 +18,7 @@ const data: Account[] = [
   {
     id: '2',
     name: 'Wallet',
-    type: Type.Cash,
+    type: AccountType.Cash,
     balance: 200.0,
     currencyCode: 'USD',
     description: 'Cash in wallet',
@@ -36,6 +37,8 @@ function AccountPage() {
               tableHeader={<DataTableHeader />}
             />
           </div>
+
+          <AccountDialog />
         </>
       </ContentSection>
     </AccountProvider>

@@ -12,7 +12,6 @@ function DataTableHeader() {
       <Button
         className="space-x-1"
         onClick={() => {
-          console.log('Create Category opening')
           setOpen('create')
         }}
       >
