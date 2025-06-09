@@ -13,7 +13,7 @@ export function CategoryPrimaryButtons() {
           setOpen('create')
         }}
       >
-        <span>Create</span> <IconPlus size={18} />
+        <span>Create Category</span> <IconPlus size={18} />
       </Button>
     </div>
   )
