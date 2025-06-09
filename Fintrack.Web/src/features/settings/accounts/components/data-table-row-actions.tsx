@@ -11,6 +11,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAccount } from '../context/account-context'
+import { accountMutationScheme } from '../schemes/account.scheme'
+import type { Account } from '../account.type'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -21,7 +23,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const { setOpen, setCurrentRow } = useAccount()
 
-  const task = null
+  const task = accountMutationScheme.parse(row.original) as Account
 
   return (
     <DropdownMenu modal={false}>

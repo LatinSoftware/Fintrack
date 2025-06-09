@@ -1,5 +1,5 @@
 import useDialogState from '@/hooks/use-dialog-state'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 type DialogType = 'create' | 'update' | 'delete'
 

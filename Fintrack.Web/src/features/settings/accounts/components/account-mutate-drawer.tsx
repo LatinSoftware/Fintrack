@@ -36,10 +36,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { CurrencyInput, CurrencySelect } from '@/components/currency'
 
 interface Props {
   open: boolean
-  currentRow?: Account
+  currentRow?: Account | null
   onOpenChange: (open: boolean) => void
 }
 
@@ -70,10 +71,10 @@ function AccountMutateDrawer({ open, currentRow, onOpenChange }: Props) {
 
   const form = useForm<AccountMutation>({
     resolver: zodResolver(accountMutationScheme),
-    // defaultValues: (currentRow as AccountMutation) ?? {
-    //   name: '',
-    //   balance: 0.0,
-    // },
+    defaultValues: (currentRow as AccountMutation) ?? {
+      name: '',
+      balance: 0.0,
+    },
   })
 
   return (
@@ -117,45 +118,18 @@ function AccountMutateDrawer({ open, currentRow, onOpenChange }: Props) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="balance"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Initial Balance</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder="0.00"
-                      {...field}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    The starting balance for this account.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
+            <CurrencySelect
               control={form.control}
               name="currencyCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Currency</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. USD, EUR" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    The currency used for this account.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
+              label="Currency"
+            />
+
+            <CurrencyInput
+              control={form.control}
+              name="balance"
+              label="Initial Balance"
+              description="Current balance"
+              currencyCode={form.watch('currencyCode') || 'USD'}
             />
 
             <FormField

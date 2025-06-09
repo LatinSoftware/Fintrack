@@ -1,4 +1,4 @@
-import { createColumnHelper } from '@tanstack/react-table'
+import { createColumnHelper, type Row } from '@tanstack/react-table'
 import type { Account } from '../account.type'
 import { DataTableColumnHeader } from '@/components/datatable/data-table-column-header'
 import { Badge } from '@/components/ui/badge'
@@ -73,6 +73,6 @@ export const accountColumns = [
   }),
   {
     id: 'actions',
-    cell: ({ row }: any) => <DataTableRowActions row={row} />,
+    cell: ({ row }: { row: Row<Account> }) => <DataTableRowActions row={row} />,
   },
 ]
