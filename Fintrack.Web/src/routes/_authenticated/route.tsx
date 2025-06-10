@@ -28,6 +28,7 @@ function RouteComponent() {
             'flex h-svh flex-col',
             'group-data-[scroll-locked=1]/body:h-full',
             'has-[main.fixed-main]:group-data-[scroll-locked=1]/body:h-svh',
+            'bg-gradient-to-br from-background via-background to-muted/20',
           )}
         >
           <Outlet />
