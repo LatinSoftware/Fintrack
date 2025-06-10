@@ -1,27 +1,22 @@
 import ContentSection from '../../components/content-section'
-import { AccountProvider } from '../context/account-context'
-import { DataTable } from '@/components/datatable/data-table'
+import { AccountProvider } from '../../../accounts/context/account-context'
 
-import { accountColumns } from '../components/columns'
-import DataTableHeader from '../components/data-table-header'
-import { AccountDialog } from '../components/account-dialogs'
-import { useAccountsGet } from '@/features/accounts'
+import { AccountDialog } from '../../../accounts/components/account-dialogs'
+import { AccountsTable, useAccountsGet } from '@/features/accounts'
+import { AccountCreateButton } from '@/features/accounts'
 
 function AccountPage() {
-  const { data = [] } = useAccountsGet()
+  const { data: accounts = [] } = useAccountsGet()
 
   return (
     <AccountProvider>
-      <ContentSection title="Accounts" desc="Manage your accounts">
+      <ContentSection
+        title="Accounts"
+        desc="Manage your accounts"
+        button={<AccountCreateButton />}
+      >
         <>
-          <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12">
-            <DataTable
-              data={data}
-              columns={accountColumns}
-              tableHeader={<DataTableHeader />}
-            />
-          </div>
-
+          <AccountsTable accounts={accounts} />
           <AccountDialog />
         </>
       </ContentSection>

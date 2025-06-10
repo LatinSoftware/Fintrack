@@ -7,21 +7,12 @@ import {
   Banknote,
   Coins,
   CreditCard,
-  MoreHorizontal,
   PiggyBank,
-  Trash2,
   TrendingUp,
 } from 'lucide-react'
 import { AccountType, AccountTypeLabels, type Account } from '@/types/account'
 import { format } from 'date-fns'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { AccountTableActions } from './account-table-actions'
 
 export const accountTypeIcons: Record<
   AccountType,
@@ -143,44 +134,6 @@ export const accountColumns = [
 
   {
     id: 'actions',
-    cell: ({ row }: { row: Row<Account> }) => {
-      const account = row.original
-
-      return (
-        <DropdownMenu modal={false}>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="data-[state=open]:bg-muted flex h-8 w-8 p-0"
-            >
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[160px]">
-            <DropdownMenuItem
-            //   onClick={() => {
-            //     setCurrentRow(task)
-            //     setOpen('update')
-            //   }}
-            >
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-            //   onClick={() => {
-            //     setCurrentRow(task)
-            //     setOpen('delete')
-            //   }}
-            >
-              Delete
-              <DropdownMenuShortcut>
-                <Trash2 className="mr-2 h-4 w-4" />
-              </DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+    cell: ({ row }: { row: Row<Account> }) => <AccountTableActions row={row} />,
   },
 ]

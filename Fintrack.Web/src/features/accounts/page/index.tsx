@@ -6,6 +6,7 @@ import { AccountsTable } from '../components/account-table'
 import { useAccountsGet } from '../hooks/useAccountsQueries'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CreditCard, DollarSign, TrendingDown, TrendingUp } from 'lucide-react'
+import { AccountProvider } from '../context/account-context'
 
 export function AccountPage() {
   const { data: accounts = [], isLoading } = useAccountsGet()
@@ -25,7 +26,7 @@ export function AccountPage() {
   const accountsCount = accounts.length
 
   return (
-    <>
+    <AccountProvider>
       <Header />
 
       <Main>
@@ -120,9 +121,9 @@ export function AccountPage() {
         </div>
 
         <div className="pb-10">
-          <AccountsTable accounts={accounts} onEditAccount={() => {}} />
+          <AccountsTable accounts={accounts} />
         </div>
       </Main>
-    </>
+    </AccountProvider>
   )
 }

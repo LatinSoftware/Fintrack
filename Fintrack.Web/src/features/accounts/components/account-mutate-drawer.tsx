@@ -20,7 +20,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { useForm } from 'react-hook-form'
-import { AccountType, type Account } from '../account.type'
+import { AccountType, AccountTypeLabels, type Account } from '@/types/account'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   accountMutationScheme,
@@ -44,6 +44,24 @@ interface Props {
   onOpenChange: (open: boolean) => void
 }
 
+const accountTypes = [
+  {
+    value: AccountType.Checking,
+    label: AccountTypeLabels[AccountType.Checking],
+  },
+  { value: AccountType.Savings, label: AccountTypeLabels[AccountType.Savings] },
+  {
+    value: AccountType.CreditCard,
+    label: AccountTypeLabels[AccountType.CreditCard],
+  },
+  {
+    value: AccountType.Investment,
+    label: AccountTypeLabels[AccountType.Investment],
+  },
+  { value: AccountType.Cash, label: AccountTypeLabels[AccountType.Cash] },
+  { value: AccountType.Bank, label: AccountTypeLabels[AccountType.Bank] },
+]
+
 function AccountMutateDrawer({ open, currentRow, onOpenChange }: Props) {
   const isUpdate = !!currentRow
 
@@ -56,17 +74,6 @@ function AccountMutateDrawer({ open, currentRow, onOpenChange }: Props) {
       data,
       `Account ${isUpdate ? 'updated' : 'created'} successfully`,
     )
-
-    // createOrUpdate(data, {
-    //   onSuccess: () => {
-    //     form.reset()
-    //     onOpenChange(false)
-    //     showSubmittedData(
-    //       data,
-    //       `Category ${isUpdate ? 'updated' : 'created'} successfully`,
-    //     )
-    //   },
-    // })
   }
 
   const form = useForm<AccountMutation>({
@@ -139,15 +146,15 @@ function AccountMutateDrawer({ open, currentRow, onOpenChange }: Props) {
                 <FormItem>
                   <FormLabel>Account Type</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
+                    <FormControl className="w-full">
                       <SelectTrigger>
                         <SelectValue placeholder="Select an account type" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {Object.values(AccountType).map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
+                      {accountTypes.map((type) => (
+                        <SelectItem key={type.value} value={type.value}>
+                          {type.label}
                         </SelectItem>
                       ))}
                     </SelectContent>

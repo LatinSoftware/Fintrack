@@ -34,10 +34,9 @@ import { Button } from '@/components/ui/button'
 
 interface Props {
   accounts: Account[]
-  onEditAccount: (account: Account) => void
 }
 
-function AccountsTable({ accounts, onEditAccount }: Props) {
+function AccountsTable({ accounts }: Props) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = useState<string>()
@@ -66,7 +65,7 @@ function AccountsTable({ accounts, onEditAccount }: Props) {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar cuentas..."
+            placeholder="Search accounts..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
             className="pl-10 h-10"
@@ -127,7 +126,6 @@ function AccountsTable({ accounts, onEditAccount }: Props) {
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                   className="border-border/50 hover:bg-muted/50 cursor-pointer transition-colors"
-                  onClick={() => onEditAccount(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-4">
@@ -160,7 +158,7 @@ function AccountsTable({ accounts, onEditAccount }: Props) {
       {table.getPageCount() > 1 && (
         <div className="flex items-center justify-between space-x-2 py-4">
           <div className="text-sm text-muted-foreground">
-            Mostrando{' '}
+            Showing{' '}
             {table.getState().pagination.pageIndex *
               table.getState().pagination.pageSize +
               1}{' '}
@@ -170,7 +168,7 @@ function AccountsTable({ accounts, onEditAccount }: Props) {
                 table.getState().pagination.pageSize,
               accounts.length,
             )}{' '}
-            de {accounts.length} cuentas
+            of {accounts.length} accounts
           </div>
           <div className="space-x-2">
             <Button

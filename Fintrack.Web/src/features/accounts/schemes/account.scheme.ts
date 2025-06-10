@@ -1,5 +1,5 @@
+import { AccountType } from '@/types/account'
 import { z } from 'zod'
-import { AccountType } from '../account.type'
 
 export const accountMutationScheme = z.object({
   name: z.string().min(1),
