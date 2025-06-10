@@ -20,9 +20,6 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import React, { useState } from 'react'
-import { Input } from '../ui/input'
-import { Button } from '../ui/button'
-import { PlusIcon } from '@radix-ui/react-icons'
 
 interface Props<TData, TValue> {
   data: TData[]
