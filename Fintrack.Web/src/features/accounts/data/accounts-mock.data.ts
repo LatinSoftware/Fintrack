@@ -1,0 +1,48 @@
+import { AccountType, type Account } from '@/types/account'
+
+export const mockAccounts: Account[] = [
+  {
+    id: '1',
+    name: 'Cuenta Corriente Principal',
+    type: AccountType.Checking,
+    balance: 15420.5,
+    currencyCode: 'USD',
+    description: 'Cuenta principal para gastos diarios',
+    isActive: true,
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-06-01'),
+  },
+  {
+    id: '2',
+    name: 'Ahorros Emergencia',
+    type: AccountType.Savings,
+    balance: 45000.0,
+    currencyCode: 'USD',
+    description: 'Fondo de emergencia familiar',
+    isActive: true,
+    createdAt: new Date('2024-02-20'),
+    updatedAt: new Date('2024-05-15'),
+  },
+  {
+    id: '3',
+    name: 'Tarjeta de Crédito',
+    type: AccountType.CreditCard,
+    balance: -2340.75,
+    currencyCode: 'USD',
+    description: 'Tarjeta de crédito para compras',
+    isActive: true,
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date('2024-06-05'),
+  },
+  {
+    id: '4',
+    name: 'Inversiones',
+    type: AccountType.Investment,
+    balance: 25750.3,
+    currencyCode: 'USD',
+    description: 'Portafolio de inversiones',
+    isActive: true,
+    createdAt: new Date('2024-03-01'),
+    updatedAt: new Date('2024-06-08'),
+  },
+]
