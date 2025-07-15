@@ -2,7 +2,6 @@ import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import tailanimate from 'tailwindcss-animate'
 import { loadEnv } from 'vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 
@@ -15,7 +14,6 @@ export default defineConfig(({ mode }) => {
       TanStackRouterVite({ autoCodeSplitting: true }),
       viteReact(),
       tailwindcss(),
-      tailanimate(),
     ],
     server: {
       port: parseInt(env.VITE_PORT),

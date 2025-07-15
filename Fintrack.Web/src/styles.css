@@ -178,3 +178,11 @@ code {
 @utility faded-bottom {
   @apply after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:hidden after:h-32 after:w-full after:bg-[linear-gradient(180deg,_transparent_10%,_var(--background)_70%)] md:after:block;
 }
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}

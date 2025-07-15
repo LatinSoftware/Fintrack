@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedTransactionsIndexImport } from './routes/_authenticated/transactions/index'
 import { Route as AuthenticatedSettingsIndexImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedAccountsIndexImport } from './routes/_authenticated/accounts/index'
 import { Route as AuthenticatedSettingsExpenseCategoriesImport } from './routes/_authenticated/settings/expense-categories'
@@ -39,6 +40,13 @@ const AuthenticatedSettingsRouteRoute = AuthenticatedSettingsRouteImport.update(
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any,
 )
+
+const AuthenticatedTransactionsIndexRoute =
+  AuthenticatedTransactionsIndexImport.update({
+    id: '/transactions/',
+    path: '/transactions/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 const AuthenticatedSettingsIndexRoute = AuthenticatedSettingsIndexImport.update(
   {
@@ -123,6 +131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexImport
       parentRoute: typeof AuthenticatedSettingsRouteImport
     }
+    '/_authenticated/transactions/': {
+      id: '/_authenticated/transactions/'
+      path: '/transactions'
+      fullPath: '/transactions'
+      preLoaderRoute: typeof AuthenticatedTransactionsIndexImport
+      parentRoute: typeof AuthenticatedRouteImport
+    }
   }
 }
 
@@ -151,12 +166,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAccountsIndexRoute: typeof AuthenticatedAccountsIndexRoute
+  AuthenticatedTransactionsIndexRoute: typeof AuthenticatedTransactionsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAccountsIndexRoute: AuthenticatedAccountsIndexRoute,
+  AuthenticatedTransactionsIndexRoute: AuthenticatedTransactionsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -170,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/settings/expense-categories': typeof AuthenticatedSettingsExpenseCategoriesRoute
   '/accounts': typeof AuthenticatedAccountsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/transactions': typeof AuthenticatedTransactionsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -178,6 +196,7 @@ export interface FileRoutesByTo {
   '/settings/expense-categories': typeof AuthenticatedSettingsExpenseCategoriesRoute
   '/accounts': typeof AuthenticatedAccountsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/transactions': typeof AuthenticatedTransactionsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -189,6 +208,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/expense-categories': typeof AuthenticatedSettingsExpenseCategoriesRoute
   '/_authenticated/accounts/': typeof AuthenticatedAccountsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/transactions/': typeof AuthenticatedTransactionsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -201,6 +221,7 @@ export interface FileRouteTypes {
     | '/settings/expense-categories'
     | '/accounts'
     | '/settings/'
+    | '/transactions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -208,6 +229,7 @@ export interface FileRouteTypes {
     | '/settings/expense-categories'
     | '/accounts'
     | '/settings'
+    | '/transactions'
   id:
     | '__root__'
     | '/_authenticated'
@@ -217,6 +239,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/expense-categories'
     | '/_authenticated/accounts/'
     | '/_authenticated/settings/'
+    | '/_authenticated/transactions/'
   fileRoutesById: FileRoutesById
 }
 
@@ -246,7 +269,8 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/settings",
         "/_authenticated/",
-        "/_authenticated/accounts/"
+        "/_authenticated/accounts/",
+        "/_authenticated/transactions/"
       ]
     },
     "/_authenticated/settings": {
@@ -277,6 +301,10 @@ export const routeTree = rootRoute
     "/_authenticated/settings/": {
       "filePath": "_authenticated/settings/index.tsx",
       "parent": "/_authenticated/settings"
+    },
+    "/_authenticated/transactions/": {
+      "filePath": "_authenticated/transactions/index.tsx",
+      "parent": "/_authenticated"
     }
   }
 }
