@@ -1,5 +1,5 @@
 import ContentSection from '../components/content-section'
-import type { CategoryType } from './category.types'
+import type { CategoryType } from '../../../types/category'
 import { CategoryDialogs } from './components/category-dialogs'
 import { CategoryPrimaryButtons } from './components/category-primary-buttons'
 import { categoryColumns } from './components/columns'
