@@ -29,10 +29,11 @@ import { Textarea } from '@/components/ui/textarea'
 import type { Category } from '@/types'
 import { TransactionType, type Transaction } from '@/types/transactions'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DollarSignIcon, Loader2 } from 'lucide-react'
+import { DollarSignIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useTransactionMutation } from '../hooks/useTransactionMutation'
+import { DatePicker } from '@/components/datepicker'
 
 interface Props {
   open: boolean
@@ -53,6 +54,8 @@ const transactionSchema = z.object({
   categoryId: z.string().min(1, 'Category is required'),
   description: z.string().min(1, 'Description is required'),
   note: z.string().optional(),
+  originAccountId: z.string().min(1, 'Origin account is required'),
+  transactionDate: z.date(),
 })
 
 type TransactionFormData = z.infer<typeof transactionSchema>
@@ -71,6 +74,7 @@ export function TransactionMutateDrawer({
       categoryId: '',
       description: '',
       note: '',
+      transactionDate: new Date(),
     },
   })
 
@@ -83,7 +87,7 @@ export function TransactionMutateDrawer({
   )
 
   const onSubmit = (data: TransactionFormData) => {
-    console.log('Submitted Data:', data)
+    create(data)
   }
 
   return (
@@ -147,6 +151,25 @@ export function TransactionMutateDrawer({
 
             <FormField
               control={form.control}
+              name="transactionDate"
+              render={({ field }) => {
+                console.log('Transaction Date Field:', field.value)
+                return (
+                  <FormItem>
+                    <FormLabel>Date</FormLabel>
+                    <DatePicker
+                      date={field.value}
+                      onDateChange={field.onChange}
+                      className="z-[100]"
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
+
+            <FormField
+              control={form.control}
               name="amount"
               render={({ field }) => (
                 <FormItem>
@@ -174,6 +197,31 @@ export function TransactionMutateDrawer({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Category</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl className="w-full">
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {filteredCategories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="originAccountId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Account</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl className="w-full">
                       <SelectTrigger className="h-12">

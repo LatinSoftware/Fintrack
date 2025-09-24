@@ -8,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Portal } from '@radix-ui/react-popover'
 
 interface DatePickerProps {
   date: Date
@@ -30,19 +31,21 @@ export function DatePicker({ date, onDateChange, className }: DatePickerProps) {
           <span className="text-foreground">{format(date, 'PPP')}</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="w-auto p-0 border-border/60 bg-background/95 backdrop-blur-sm"
-        align="start"
-      >
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(selectedDate) =>
-            selectedDate && onDateChange(selectedDate)
-          }
-          className="p-4 rounded-xl"
-        />
-      </PopoverContent>
+      <Portal>
+        <PopoverContent
+          className="w-auto p-0 border-border/60 bg-background/95 backdrop-blur-sm z-[999]"
+          align="start"
+        >
+          <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(selectedDate) =>
+              selectedDate && onDateChange(selectedDate)
+            }
+            className="p-4 rounded-xl"
+          />
+        </PopoverContent>
+      </Portal>
     </Popover>
   )
 }
