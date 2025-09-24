@@ -12,6 +12,16 @@ export interface Transaction {
   [property: string]: any
 }
 
+export interface TransactionMutate {
+  amount: string
+  type: TransactionType
+  categoryId: string
+  description: string
+  originAccountId: string
+  transactionDate: Date
+  note?: string
+}
+
 export enum TransactionType {
   Expense = 'expense',
   Income = 'income',
