@@ -26,7 +26,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { Textarea } from '@/components/ui/textarea'
-import type { Category } from '@/types'
+import type { Account, Category } from '@/types'
 import { TransactionType, type Transaction } from '@/types/transactions'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { DollarSignIcon } from 'lucide-react'
@@ -40,6 +40,7 @@ interface Props {
   currentRow?: Transaction | null
   onOpenChange: (open: boolean) => void
   categories: Category[]
+  accounts: Account[]
 }
 
 const transactionSchema = z.object({
@@ -65,6 +66,7 @@ export function TransactionMutateDrawer({
   currentRow,
   onOpenChange,
   categories,
+  accounts,
 }: Props) {
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
@@ -229,9 +231,9 @@ export function TransactionMutateDrawer({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {filteredCategories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
+                      {accounts.map((account) => (
+                        <SelectItem key={account.id} value={account.id}>
+                          {account.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
