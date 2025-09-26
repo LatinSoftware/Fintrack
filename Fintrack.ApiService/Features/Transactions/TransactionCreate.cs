@@ -57,7 +57,7 @@ public sealed class TransactionCreate
             RuleFor(x => x.Amount).GreaterThan(0);
             RuleFor(x => x.CurrencyCode).NotEmpty().Length(3);
             RuleFor(x => x.Note).MaximumLength(200);
-            RuleFor(x => x.Description).MaximumLength(1500);
+            RuleFor(x => x.Description).MaximumLength(1500).Empty();
             RuleFor(x => x.TransactionDate).NotEmpty();
         }
     }

@@ -7,24 +7,30 @@ using Fintrack.ApiService.Shared.Abstractions;
 using Fintrack.ApiService.Shared.Extensions;
 using Fintrack.ApiService.Shared.Models;
 using FluentResults;
+using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fintrack.ApiService.Features.Transactions;
 
 public sealed class TransactionFilter
-{   
+{
     public record Response(
-        Guid Id, 
+        Guid Id,
         TransactionType Type,
-        string Note, 
+        string Note,
         string? Description,
-        string OriginAccount, 
-        string Category,
-        decimal Amount, 
+        decimal Amount,
         string CurrencyCode,
+        TransactionAccount OriginAccount,
+        TransactionCategory Category,
         DateTime TransactionDate,
-        DateTime CreatedAt);
+        DateTime CreatedAt
+        );
+
+    public record TransactionAccount(Guid Id, string Name);
+    public record TransactionCategory(Guid Id, string Name);
+
     public class Request : IQuery<PagedResult<Response>>
     {
         [JsonIgnore] public UserId UserId { get; set; } = default!;
@@ -46,20 +52,19 @@ public sealed class TransactionFilter
             .Transactions
             .AsNoTracking().Where(x => x.UserId == request.UserId);
 
-    
-            
+
             if (request.Category.HasValue)
                 query = query.Where(x => x.CategoryId == request.Category.Value);
-            
+
             if (request.OriginAccount.HasValue)
                 query = query.Where(x => x.OriginAccountId == request.OriginAccount.Value);
-            
+
             if (request.From.HasValue)
                 query = query.Where(x => DateOnly.FromDateTime(x.Date) >= request.From.Value);
-            
+
             if (request.To.HasValue)
                 query = query.Where(x => DateOnly.FromDateTime(x.Date) <= request.To.Value);
-            
+
             if (request.Type.HasValue)
                 query = query.Where(x => x.Type == request.Type.Value);
 
@@ -67,18 +72,19 @@ public sealed class TransactionFilter
             var items = await query
                 .Skip(request.Offset)
                 .Take(request.Limit)
-                .Select(x => new Response(
-                    x.Id.Value,
-                    x.Type,
-                    x.Note.Value,
-                    x.Description,
-                    x.OriginAccount.Name,
-                    x.Category.Name,
-                    x.Amount.Amount,
-                    x.Amount.Currency.Code,
-                    x.Date,
-                    x.CreatedAt))
-                .ToListAsync(cancellationToken);
+                .OrderByDescending(x => x.Date)
+                .Select(t => new Response(
+                    t.Id.Value,
+                    t.Type,
+                    t.Note.Value,
+                    t.Description,
+                    t.Amount.Amount,
+                    t.Amount.Currency.Code,
+                    new TransactionAccount(t.OriginAccount.Id.Value, t.OriginAccount.Name),
+                    new TransactionCategory(t.Category.Id.Value, t.Category.Name),
+                    t.Date,
+                    t.CreatedAt
+                )).ToListAsync(cancellationToken);
 
             var result = PagedResult<Response>.Create(items, totalItems, request.Limit, request.Offset);
 
@@ -90,7 +96,7 @@ public sealed class TransactionFilter
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/transactions", async (ISender sender, 
+            app.MapGet("/transactions", async (ISender sender,
             Guid? originAccount, Guid? category, DateOnly? from, DateOnly? to,
             TransactionType? type, int limit, int offset, HttpContext httpContext) =>
             {
@@ -105,8 +111,8 @@ public sealed class TransactionFilter
                     Limit = limit,
                     Offset = offset
                 };
-               var result = await sender.Send(request);
-               return result.ToActionResult(data => Results.Ok(data));
+                var result = await sender.Send(request);
+                return result.ToActionResult(data => Results.Ok(data));
             })
             .WithName("GetTransactions")
             .Produces<PagedResult<Response>>(StatusCodes.Status200OK)
