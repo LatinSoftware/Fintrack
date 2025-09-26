@@ -7,7 +7,6 @@ using Fintrack.ApiService.Shared.Abstractions;
 using Fintrack.ApiService.Shared.Extensions;
 using Fintrack.ApiService.Shared.Models;
 using FluentResults;
-using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
