@@ -1,6 +1,8 @@
-import { useGetCategories } from '@/features/settings/categories/hooks'
+import { useAccountsGet } from '@/features/accounts'
+import { useGetCategories } from '@/features/settings/categories'
+
 import useDialogState from '@/hooks/use-dialog-state'
-import type { Category, Transaction } from '@/types'
+import type { Account, Category, Transaction } from '@/types'
 import React, { useState } from 'react'
 
 type TransactionDialogType = 'create' | 'update' | 'delete' | 'import'
@@ -10,9 +12,14 @@ interface TransactionContextType {
   setOpen: (str: TransactionDialogType | null) => void
   currentRow: Transaction | null
   setCurrentRow: React.Dispatch<React.SetStateAction<Transaction | null>>
-  categories: {
+  category: {
     loading: boolean
     data: Category[]
+    error: Error | null
+  }
+  account: {
+    loading: boolean
+    data: Account[]
     error: Error | null
   }
 }
@@ -29,6 +36,11 @@ export default function TransactionProvider({ children }: Props) {
   const [open, setOpen] = useDialogState<TransactionDialogType>(null)
   const [currentRow, setCurrentRow] = useState<Transaction | null>(null)
   const { data, isFetching, error } = useGetCategories()
+  const {
+    data: accounts = [],
+    isFetching: isAccountLoading,
+    error: accountError,
+  } = useAccountsGet()
 
   return (
     <TransactionContext
@@ -37,7 +49,12 @@ export default function TransactionProvider({ children }: Props) {
         setOpen,
         currentRow,
         setCurrentRow,
-        categories: { loading: isFetching, data: data || [], error },
+        category: { loading: isFetching, data: data || [], error },
+        account: {
+          data: accounts,
+          loading: isAccountLoading,
+          error: accountError,
+        },
       }}
     >
       {children}
