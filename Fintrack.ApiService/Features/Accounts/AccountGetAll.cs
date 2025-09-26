@@ -13,7 +13,7 @@ namespace Fintrack.ApiService.Features.Accounts;
 public sealed class AccountGetAll
 {
     public record Query(Guid UserId, string? Name, AccountType? Type) : IQuery<IEnumerable<AccountDto>>;
-    public record AccountDto(Guid Id, string Name, string Description, AccountType Type, Money Balance);
+    public record AccountDto(Guid Id, string Name, AccountType Type, string CurrencyCode, decimal Balance, string Description);
 
     public class AccountGetAllHandler(ApplicationContext applicationContext) : IQueryHandler<Query, IEnumerable<AccountDto>>
     {
@@ -37,7 +37,7 @@ public sealed class AccountGetAll
             var accounts = await query
                 .AsNoTracking()
                 .Where(c => c.UserId == UserId.From(request.UserId))
-                .Select(c => new AccountDto(c.Id.Value, c.Name, c.Description, c.Type, c.Balance))
+                .Select(c => new AccountDto(c.Id.Value, c.Name, c.Type, c.Balance.Currency.Code, c.Balance.Amount, c.Description))
                 .ToListAsync(cancellationToken);
 
 
