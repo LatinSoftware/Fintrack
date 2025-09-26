@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
-import { mockAccounts } from '../data/accounts-mock.data'
+
+import { api } from '@/lib/api-client'
+import type { Account } from '@/types'
 
 function useAccountsGet() {
   return useQuery({
     queryKey: ['accounts'],
     queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      return mockAccounts
+      return api.get<Account[]>('/accounts')
     },
   })
 }
