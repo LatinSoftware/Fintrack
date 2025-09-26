@@ -5,9 +5,13 @@ import { Clock, TrendingDownIcon, TrendingUpIcon } from 'lucide-react'
 
 interface TransactionCardProps {
   transaction: Transaction
+  onClick?: () => void
 }
 
-export function TransactionCard({ transaction }: TransactionCardProps) {
+export function TransactionCard({
+  transaction,
+  onClick,
+}: TransactionCardProps) {
   const isIncome = transaction.type === TransactionType.Income
   const amountColor = isIncome
     ? 'text-emerald-600 dark:text-emerald-400'
@@ -22,7 +26,8 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
 
   return (
     <Card
-      className={`group transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 border ${borderColor} ${bgColor} hover:scale-[1.02] backdrop-blur-sm`}
+      className={`group transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 border ${borderColor} ${bgColor} hover:scale-[1.02] backdrop-blur-sm cursor-pointer`}
+      onClick={onClick}
     >
       <CardContent className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">

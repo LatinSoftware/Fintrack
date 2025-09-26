@@ -13,6 +13,7 @@ import { TransactionCard } from './transaction-card'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { format } from 'date-fns'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useTransaction } from '../context/transaction-context'
 
 interface TransactionSectionProps {
   selectedDate: Date
@@ -33,6 +34,8 @@ export function TransactionSection({
   activeTab,
   setActiveTab,
 }: TransactionSectionProps) {
+  const { setCurrentRow, setOpen } = useTransaction()
+
   const renderTabContent = (
     value: string,
     emptyIcon: LucideIcon,
@@ -42,7 +45,7 @@ export function TransactionSection({
     return (
       <TabsContent value={value} className="animate-in fade-in-50">
         {displayedTransactions.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-16 cursor-pointer ">
             <div
               className={cn(
                 'w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4',
@@ -80,7 +83,13 @@ export function TransactionSection({
                     className="animate-in fade-in-50 slide-in-from-bottom-4"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <TransactionCard transaction={transaction} />
+                    <TransactionCard
+                      transaction={transaction}
+                      onClick={() => {
+                        setCurrentRow(transaction)
+                        setOpen('update')
+                      }}
+                    />
                   </div>
                 ))}
                 <div className="h-4" />
@@ -176,7 +185,13 @@ export function TransactionSection({
                       className="animate-in fade-in-50 slide-in-from-bottom-4"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
-                      <TransactionCard transaction={transaction} />
+                      <TransactionCard
+                        transaction={transaction}
+                        onClick={() => {
+                          setCurrentRow(transaction)
+                          setOpen('update')
+                        }}
+                      />
                     </div>
                   ))}
                   <div className="h-4" />

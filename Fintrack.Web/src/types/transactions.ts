@@ -1,25 +1,33 @@
 export interface Transaction {
-  amount: number
-  categoryId: string
-  createdAt: Date
-  currencyCode: string
-  description?: null | string
   id: string
-  note?: null | string
-  originAccountId: string
-  transactionDate: Date
+  currencyCode: string
+  amount: number
   type: TransactionType
-  [property: string]: any
+  note: null | string
+  description?: null | string
+  transactionDate: Date
+
+  category: {
+    id: string
+    name: string
+  }
+
+  originAccount: {
+    id: string
+    name: string
+  }
+
+  createdAt: Date
 }
 
 export interface TransactionMutate {
   amount: string
   type: TransactionType
   categoryId: string
-  description: string
   originAccountId: string
   transactionDate: Date
-  note?: string
+  note: string
+  description?: string
 }
 
 export enum TransactionType {

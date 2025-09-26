@@ -53,8 +53,12 @@ const transactionSchema = z.object({
     ),
   type: z.enum([TransactionType.Income, TransactionType.Expense]),
   categoryId: z.string().min(1, 'Category is required'),
-  description: z.string().min(1, 'Description is required'),
-  note: z.string().optional(),
+  currencyCode: z
+    .string()
+    .length(3, 'Currency code must be 3 characters')
+    .optional(),
+  description: z.string().max(500, 'Description is required').optional(),
+  note: z.string().max(200, 'Note must be at most 200 characters').min(1),
   originAccountId: z.string().min(1, 'Origin account is required'),
   transactionDate: z.date(),
 })
@@ -71,12 +75,14 @@ export function TransactionMutateDrawer({
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
-      amount: '',
-      type: TransactionType.Expense,
-      categoryId: '',
-      description: '',
-      note: '',
-      transactionDate: new Date(),
+      amount: String(currentRow?.amount),
+      type: currentRow?.type || TransactionType.Expense,
+      categoryId: currentRow?.category.id,
+      description: currentRow?.description || '',
+      note: currentRow?.note || '',
+      currencyCode: currentRow?.currencyCode || 'DOP',
+      transactionDate: currentRow?.transactionDate || new Date(),
+      originAccountId: currentRow?.originAccount.id,
     },
   })
 
@@ -155,7 +161,6 @@ export function TransactionMutateDrawer({
               control={form.control}
               name="transactionDate"
               render={({ field }) => {
-                console.log('Transaction Date Field:', field.value)
                 return (
                   <FormItem>
                     <FormLabel>Date</FormLabel>
@@ -168,6 +173,28 @@ export function TransactionMutateDrawer({
                   </FormItem>
                 )
               }}
+            />
+
+            <FormField
+              control={form.control}
+              name="currencyCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Currency</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl className="w-full">
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Select a currency" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="DOP">Dominican Peso</SelectItem>
+                      <SelectItem value="USD">Dollar</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
 
             <FormField
@@ -245,14 +272,14 @@ export function TransactionMutateDrawer({
 
             <FormField
               control={form.control}
-              name="description"
+              name="note"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Note</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="Enter transaction description"
+                      placeholder="Enter transaction note"
                       className="h-12"
                     />
                   </FormControl>
@@ -263,14 +290,14 @@ export function TransactionMutateDrawer({
 
             <FormField
               control={form.control}
-              name="note"
+              name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Note (Optional)</FormLabel>
+                  <FormLabel>Description (Optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       {...field}
-                      placeholder="Add any additional notes..."
+                      placeholder="Add any additional description..."
                       className="min-h-[100px] resize-none"
                     />
                   </FormControl>
