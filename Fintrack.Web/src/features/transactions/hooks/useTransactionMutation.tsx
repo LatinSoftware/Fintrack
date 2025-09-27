@@ -60,9 +60,27 @@ export function useTransactionMutation() {
     },
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const url = `${BASE_URL}/${id}`
+      return api.delete<TransactionMutate, Transaction>(url)
+    },
+    onSuccess: handleSuccess,
+    onError: (error) => {
+      console.error('Error deleting transaction:', error)
+      toast.message('Failed to delete transaction', {
+        description: error?.message,
+      })
+    },
+  })
+
   return {
     create: createMutation.mutate,
     update: updateMutation.mutate,
-    isLoading: createMutation.isPending || updateMutation.isPending,
+    remove: deleteMutation.mutate,
+    isLoading:
+      createMutation.isPending ||
+      updateMutation.isPending ||
+      deleteMutation.isPending,
   }
 }

@@ -29,7 +29,7 @@ import { Textarea } from '@/components/ui/textarea'
 import type { Account, Category } from '@/types'
 import { TransactionType, type Transaction } from '@/types/transactions'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { DollarSignIcon } from 'lucide-react'
+import { DollarSign, DollarSignIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useTransactionMutation } from '../hooks/useTransactionMutation'
@@ -111,9 +111,16 @@ export function TransactionMutateDrawer({
       }}
     >
       <SheetContent className="flex flex-col">
-        <SheetHeader className="text-left">
-          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Transaction</SheetTitle>
-          <SheetDescription>
+        <SheetHeader className="text-center space-y-2">
+          <SheetTitle>
+            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+              <DollarSignIcon className="h-6 w-6 text-primary" />
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">
+              {isUpdate ? 'Edit Transaction' : 'Add Transaction'}
+            </h2>
+          </SheetTitle>
+          <SheetDescription className="text-muted-foreground">
             {isUpdate
               ? 'Update the transaction by providing the necessary details.'
               : 'Record a new income or expense transaction '}
@@ -313,11 +320,9 @@ export function TransactionMutateDrawer({
         </Form>
 
         <SheetFooter className="gap-2">
-          <SheetClose asChild>
-            <Button variant="outline" disabled={isLoading}>
-              Close
-            </Button>
-          </SheetClose>
+          <Button variant="destructive" disabled={isLoading}>
+            Delete
+          </Button>
           {isLoading ? (
             <LoadingButton />
           ) : (
