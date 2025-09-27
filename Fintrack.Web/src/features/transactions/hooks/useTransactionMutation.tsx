@@ -2,6 +2,9 @@ import { api } from '@/lib/api-client'
 import type { Transaction, TransactionMutate } from '@/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
+import { toast } from 'sonner'
+
+const BASE_URL = '/transactions'
 
 export function useTransactionMutation() {
   const queryClient = useQueryClient()
@@ -15,7 +18,7 @@ export function useTransactionMutation() {
 
   const createMutation = useMutation({
     mutationFn: async (data: TransactionMutate) => {
-      const url = '/transactions'
+      const url = BASE_URL
       const payload = {
         ...data,
         amount: Number(data.amount), // Convert amount to number
@@ -26,11 +29,40 @@ export function useTransactionMutation() {
     onSuccess: handleSuccess,
     onError: (error) => {
       console.error('Error creating transaction:', error)
+      toast.message('Failed to create transaction', {
+        description: error?.message,
+      })
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: string
+      data: TransactionMutate
+    }) => {
+      const url = `${BASE_URL}/${id}`
+      const payload = {
+        ...data,
+        amount: Number(data.amount),
+      }
+
+      return api.put<TransactionMutate, Transaction>(url, payload)
+    },
+    onSuccess: handleSuccess,
+    onError: (error) => {
+      console.error('Error updating transaction:', error)
+      toast.message('Failed to update transaction', {
+        description: error?.message,
+      })
     },
   })
 
   return {
     create: createMutation.mutate,
-    isLoading: createMutation.isPending,
+    update: updateMutation.mutate,
+    isLoading: createMutation.isPending || updateMutation.isPending,
   }
 }

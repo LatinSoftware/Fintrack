@@ -81,21 +81,25 @@ export function TransactionMutateDrawer({
       description: currentRow?.description || '',
       note: currentRow?.note || '',
       currencyCode: currentRow?.currencyCode || 'DOP',
-      transactionDate: currentRow?.transactionDate || new Date(),
+      transactionDate: new Date(),
       originAccountId: currentRow?.originAccount.id,
     },
   })
 
   const isUpdate = !!currentRow
 
-  const { create, isLoading } = useTransactionMutation()
+  const { create, update, isLoading } = useTransactionMutation()
 
   const filteredCategories = categories.filter(
     (category) => category.type === form.watch('type'),
   )
 
   const onSubmit = (data: TransactionFormData) => {
-    create(data)
+    if (isUpdate && currentRow) {
+      update({ id: currentRow.id, data })
+    } else {
+      create(data)
+    }
   }
 
   return (
