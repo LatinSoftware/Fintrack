@@ -1,7 +1,7 @@
 import { PlusIcon } from '@radix-ui/react-icons'
 import { Button } from '@/components/ui/button'
-import { DatePicker } from '@/components/datepicker'
 import { useTransaction } from '../context/transaction-context'
+import { MonthYearPicker } from '@/components/monthyear-picker'
 
 interface DateSelectorProps {
   selectedDate: Date
@@ -20,7 +20,8 @@ export function DateSelector({
         <label className="text-sm font-medium text-muted-foreground">
           Select Date
         </label>
-        <DatePicker
+
+        <MonthYearPicker
           date={selectedDate}
           onDateChange={onDateChange}
           className="w-full"
