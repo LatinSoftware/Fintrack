@@ -59,10 +59,14 @@ public sealed class TransactionFilter
                 query = query.Where(x => x.OriginAccountId == request.OriginAccount.Value);
 
             if (request.From.HasValue)
-                query = query.Where(x => DateOnly.FromDateTime(x.Date) >= request.From.Value);
+                query = query.Where(x =>
+                    x.Date.Year > request.From.Value.Year ||
+                    (x.Date.Year == request.From.Value.Year && x.Date.Month >= request.From.Value.Month));
 
             if (request.To.HasValue)
-                query = query.Where(x => DateOnly.FromDateTime(x.Date) <= request.To.Value);
+                query = query.Where(x =>
+                    x.Date.Year < request.To.Value.Year ||
+                    (x.Date.Year == request.To.Value.Year && x.Date.Month <= request.To.Value.Month));
 
             if (request.Type.HasValue)
                 query = query.Where(x => x.Type == request.Type.Value);

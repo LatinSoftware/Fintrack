@@ -12,7 +12,7 @@ export function useTransactionMutation() {
   const handleSuccess = (data: Transaction) => {
     console.log('Transaction created successfully:', data)
     queryClient.invalidateQueries({
-      queryKey: ['transactions', format(data.transactionDate, 'yyyy-MM-dd')],
+      queryKey: ['transactions', format(data.transactionDate, 'yyyy-MM')],
     })
   }
 

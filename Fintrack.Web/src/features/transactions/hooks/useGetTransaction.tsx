@@ -5,10 +5,10 @@ import type { PaginationResponse, Transaction } from '@/types'
 
 export function useGetTransaction(date: Date) {
   const query = useQuery<PaginationResponse<Transaction>>({
-    queryKey: ['transactions', format(date, 'yyyy-MM-dd')],
+    queryKey: ['transactions', format(date, 'yyyy-MM')],
     queryFn: async () => {
-      const dateString = format(date, 'yyyy-MM-dd')
-      const url = `/transactions?from=${dateString}&to=${dateString}&limit=1000&offset=0`
+      const dateString = format(date, 'yyyy-MM')
+      const url = `/transactions?from=${dateString}&to=${dateString}&limit=9999&offset=0`
 
       return await api.get<any, PaginationResponse<Transaction>>(url)
     },

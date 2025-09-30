@@ -116,9 +116,9 @@ export function TransactionMutateDrawer({
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
               <DollarSignIcon className="h-6 w-6 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold tracking-tight">
+            <span className="text-2xl font-bold tracking-tight">
               {isUpdate ? 'Edit Transaction' : 'Add Transaction'}
-            </h2>
+            </span>
           </SheetTitle>
           <SheetDescription className="text-muted-foreground">
             {isUpdate
