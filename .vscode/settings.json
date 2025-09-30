@@ -1,9 +1,4 @@
 {
-    "dotnet.defaultSolution": "Fintrack.sln",
-    "cSpell.words": [
-        "Fintrack",
-        "fintrackdb",
-        "Hmac",
-        "Mediat"
-    ]
+  "dotnet.defaultSolution": "Fintrack.sln",
+  "cSpell.words": ["Fintrack", "fintrackdb", "Hmac", "Mediat", "monthyear"]
 }
